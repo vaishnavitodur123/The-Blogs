@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+    /* Colors  */
+    --lightGreen: #b9e7e7;
+
+    /* Fonts  */
+    --poppins: "Poppins", sans-serif;
+    --bebas: "Bebas Neue", cursive;
+    --mont: "Montserrat", sans-serif;
+    --inter: "Inter", sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    font-family: var(--inter);
+}
+
+/*  */
+
+@media only screen and (max-width: 1200px) {
+}
+
+@media only screen and (max-width: 800px) {
+}
+
+@media only screen and (max-width: 700px) {
+}
+
+@media only screen and (max-width: 650px) {
+}

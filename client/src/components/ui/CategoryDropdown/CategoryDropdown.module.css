@@ -1,0 +1,53 @@
+/* CategoryDropdown.module.css */
+
+.selectMenu {
+    min-width: 230px;
+}
+
+.selectBtn {
+    display: flex;
+    padding: 15px 20px;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #24242450;
+}
+
+.downarrowIcon {
+    width: 15px;
+    height: 15px;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    padding: 20px 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    background-color: #fff;
+    border: 1px solid #24242450;
+    opacity: 0;
+    transform: translateY(-100px);
+}
+
+.option {
+    display: flex;
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 4px;
+    align-items: center;
+    background-color: #fff;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(-100px);
+}
+
+.option:hover {
+    background-color: #f2f2f2;
+}

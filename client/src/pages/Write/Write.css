@@ -1,0 +1,89 @@
+.write-main {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 200px;
+    margin: 20px 0;
+    gap: 40px;
+}
+
+.write-content {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #fff;
+}
+
+.write-content input {
+    padding: 15px 30px;
+    border-radius: 8px;
+    border: 1px solid #24242450;
+    outline: none;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.write-content input::placeholder {
+    letter-spacing: 2px;
+    font-size: 18px;
+}
+
+.editorContainer {
+    height: 100%;
+    overflow: scroll;
+    border: 1px solid lightgray;
+}
+
+.editorContainer .editor {
+    height: 100%;
+    border: none;
+}
+
+.write-menu {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.write-menu button {
+    height: 50px;
+    padding: 0 30px;
+    border-radius: 8px;
+    outline: none;
+    color: #242424;
+    font-weight: 400;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background-color: #fff;
+    border: 1px solid #24242450;
+}
+
+.write-menu button:hover {
+    transition: all 300ms ease;
+    background-color: #f2f2f2;
+}
+
+@media only screen and (max-width: 1200px) {
+    .write-main {
+        padding: 50px 50px;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .write-main {
+        flex-direction: column;
+    }
+    .write-menu {
+        flex-direction: row;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+}
+
+@media only screen and (max-width: 650px) {
+}
