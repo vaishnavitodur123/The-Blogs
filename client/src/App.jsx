@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
-import { Route, Routes, Outlet } from "react-router-dom";
+import { Route, Routes, Outlet, useNavigate } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Login/Register";
@@ -9,6 +9,7 @@ import Post from "./pages/Post/Post";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import { Toaster } from "sonner";
+import Cookies from "js-cookie";
 
 function Layout() {
     return (
@@ -21,10 +22,19 @@ function Layout() {
 }
 
 export default function App() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const access_token = Cookies.get("access_token");
+        if (!access_token) {
+            navigate("/login");
+        }
+    }, []);
+
     return (
         <div className="app">
+            <Toaster position="top-center" />
             <div className="app_container">
-                <Toaster position="top-center" />
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />

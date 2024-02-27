@@ -11,10 +11,10 @@ const CategoryDropdown = ({ onSelect }) => {
 
     const options = [
         "Technology",
-        "Business & Marketing",
-        "Lifestyle & Culture",
-        "Science & Education",
-        "Creative Arts & Design",
+        "Business",
+        "Lifestyle",
+        "Education",
+        "CreativeArts",
     ];
 
     // TODO: Make a global state for category and import into Write.jsx

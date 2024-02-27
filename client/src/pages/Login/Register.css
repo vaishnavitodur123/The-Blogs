@@ -45,6 +45,7 @@
     align-items: flex-start;
     color: #171717;
     flex-direction: column;
+    gap: 15px;
 }
 
 .register-container input {
@@ -64,7 +65,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
 }
 
 .register-container .input-pass .Eye {

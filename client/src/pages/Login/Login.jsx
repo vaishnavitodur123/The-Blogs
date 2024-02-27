@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { AuthContext } from "../../context/authContext";
 import "./Login.css";
 
 export default function Login() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const access_token = Cookies.get("access_token");
+        if (access_token) {
+            navigate("/");
+        }
+    }, []);
+
     const [isShow, setIsShow] = useState(false);
+    const { setCurrentUser } = useContext(AuthContext);
 
     const {
         register,
@@ -15,11 +28,24 @@ export default function Login() {
         formState: { errors },
     } = useForm();
 
-    const navigate = useNavigate();
-
     const onSubmit = async (data) => {
-        console.log(data);
-        toast.success("Event has been created");
+        try {
+            console.log(data);
+            const res = await axios.post(
+                "http://localhost:8800/api/auth/login",
+                data
+            );
+            console.log("response", res);
+            if (res.status == 200) {
+                toast.success("Logged in successfully.");
+                setCurrentUser(res.data.other);
+                Cookies.set("access_token", res.data.token);
+                navigate("/");
+            }
+        } catch (err) {
+            toast.error(err.response.data);
+            console.log(err.response.data);
+        }
     };
 
     return (

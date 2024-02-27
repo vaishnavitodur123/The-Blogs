@@ -1,74 +1,108 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Menu from "../../components/Menu/Menu";
 import { useParams } from "react-router-dom";
 import {
     PencilSquareIcon,
     ArchiveBoxXMarkIcon,
 } from "@heroicons/react/24/outline";
+import axios from "axios";
+import { AuthContext } from "../../context/authContext.jsx";
+import moment from "moment";
+import { toast } from "sonner";
+import Cookies from "js-cookie";
 import "./Post.css";
 
 export default function Post() {
+    const [post, setPost] = useState({});
+
     const { id } = useParams();
+
+    const navigate = useNavigate();
+
+    const { currentUser } = useContext(AuthContext);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(
+                    `http://localhost:8800/api/posts/${id}`
+                );
+                setPost(res.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchData();
+    }, [id]);
+
+    const handleDelete = async () => {
+        const access_token = Cookies.get("access_token");
+
+        const data = {
+            token: access_token,
+            postId: id,
+        };
+
+        try {
+            if (access_token) {
+                await axios.post(
+                    `http://localhost:8800/api/posts/deletePost`,
+                    data
+                );
+                toast.success("Post deleted successfully.");
+                navigate("/");
+            }
+        } catch (err) {
+            toast.error(err.response.data);
+            console.log(err);
+        }
+    };
+
+    const getText = (html) => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        return doc.body.textContent;
+    };
 
     return (
         <div className="singlePost-main">
             <div className="singlePost-content">
-                <img
-                    src="https://images.unsplash.com/photo-1680955886616-55b83de7489f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1032&q=80"
-                    alt="img"
-                />
+                <img src={`../../../public/upload/${post?.img}`} alt="img" />
                 <div className="user">
                     <img
-                        src="https://wallpapers.com/images/high/pfp-pictures-k3dqxn3n0naxefn2.webp"
+                        src={
+                            post.userImg
+                                ? post.userImg
+                                : "https://wallpapers.com/images/high/pfp-pictures-k3dqxn3n0naxefn2.webp"
+                        }
                         alt="user-img"
                     />
                     <div className="user-info">
-                        <span>Akash</span>
-                        <p>Posted 2 days ago</p>
+                        <span>{post.username}</span>
+                        <p>Posted {moment(post.date).fromNow()}</p>
                     </div>
-                    <div className="editPost">
-                        <Link className="link" to={`/write?edit=${id}`}>
-                            <PencilSquareIcon className="icon" />
-                        </Link>
-                        <Link className="link">
-                            <ArchiveBoxXMarkIcon className="icon" />
-                        </Link>
-                    </div>
+                    {currentUser.username === post.username && (
+                        <div className="editPost">
+                            <Link
+                                className="link"
+                                to={`/write?edit=${id}`}
+                                state={post}
+                            >
+                                <PencilSquareIcon className="icon" />
+                            </Link>
+                            <Link className="link" onClick={handleDelete}>
+                                <ArchiveBoxXMarkIcon className="icon" />
+                            </Link>
+                        </div>
+                    )}
                 </div>
                 <div className="singlePost-content-details">
-                    <h1>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Voluptatum, quidem?
-                    </h1>
-                    <p>
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit. Facere voluptatem dolores aliquam ad accusamus sit
-                        rem sapiente quas suscipit provident neque, laboriosam
-                        recusandae quo quia sunt repellendus eum quidem deleniti
-                        cupiditate temporibus vitae. Nisi quaerat harum ad atque
-                        consequatur corporis?
-                    </p>
-                    <p>
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit. Facere voluptatem dolores aliquam ad accusamus sit
-                        rem sapiente quas suscipit provident neque, laboriosam
-                        recusandae quo quia sunt repellendus eum quidem deleniti
-                        cupiditate temporibus vitae. Nisi quaerat harum ad atque
-                        consequatur corporis?
-                    </p>
-                    <p>
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit. Facere voluptatem dolores aliquam ad accusamus sit
-                        rem sapiente quas suscipit provident neque, laboriosam
-                        recusandae quo quia sunt repellendus eum quidem deleniti
-                        cupiditate temporibus vitae. Nisi quaerat harum ad atque
-                        consequatur corporis?
-                    </p>
+                    <h1>{post.title}</h1>
+                    {getText(post.desc)}
                 </div>
             </div>
             <div className="singlePost-menu">
-                <Menu />
+                <Menu cat={post.cat} />
             </div>
         </div>
     );

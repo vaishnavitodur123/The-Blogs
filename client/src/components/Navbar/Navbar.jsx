@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { Bars2Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { AuthContext } from "../../context/authContext.jsx";
 import "./Navbar.css";
+import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 export default function Navbar() {
     const [toggle, setToggle] = useState(false);
+
+    const navigate = useNavigate();
+    const { currentUser } = useContext(AuthContext);
 
     useEffect(() => {
         if (toggle) {
@@ -25,6 +31,13 @@ export default function Navbar() {
         }
     }, [toggle]);
 
+    const handleLogout = () => {
+        Cookies.remove("access_token");
+        localStorage.clear();
+        toast.success("We hope to see you again soon!");
+        navigate("/login");
+    };
+
     return (
         <>
             <nav className="nav-main">
@@ -35,14 +48,8 @@ export default function Navbar() {
                         </Link>
                     </div>
                     <div className="nav-right">
-                        <Link to="/post/1" className="link">
-                            <span>Designing</span>
-                        </Link>
-                        <Link className="link">
-                            <span>Development</span>
-                        </Link>
-                        <span>Akash</span>
-                        <span>Logout</span>
+                        {currentUser && <span>{currentUser.username}</span>}
+                        <span onClick={handleLogout}>Logout</span>
                         <Link className="link" to="/write">
                             <span>Write</span>
                         </Link>

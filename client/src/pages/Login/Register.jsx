@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import axios from "axios";
 import "./Register.css";
+import Cookies from "js-cookie";
 
 export default function Register() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const access_token = Cookies.get("access_token");
+        if (access_token) {
+            navigate("/");
+        }
+    }, []);
+
     const [isShow, setIsShow] = useState(false);
 
     const {
@@ -15,11 +26,22 @@ export default function Register() {
         formState: { errors },
     } = useForm();
 
-    const navigate = useNavigate();
-
     const onSubmit = async (data) => {
-        console.log(data);
-        toast.success("Event has been created");
+        // console.log(data);
+        try {
+            const res = await axios.post(
+                "http://localhost:8800/api/auth/register",
+                data
+            );
+            console.log("response", res);
+            if (res.status == 201) {
+                toast.success("Registration successful!");
+                navigate("/login");
+            }
+        } catch (err) {
+            toast.error(err.response.data);
+            console.log(err.response.data);
+        }
     };
 
     return (
@@ -32,6 +54,13 @@ export default function Register() {
                     and sharing the world with everyone.
                 </p>
                 <form onSubmit={handleSubmit(onSubmit)}>
+                    <input
+                        placeholder="User name"
+                        {...register("username", {
+                            required: true,
+                            maxLength: 20,
+                        })}
+                    />
                     <input
                         placeholder="Email"
                         {...register("email", {

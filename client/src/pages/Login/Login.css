@@ -12,6 +12,7 @@
 }
 
 .login-main .credit {
+    z-index: 10;
     position: absolute;
     bottom: 40px;
     left: 40px;
@@ -120,6 +121,10 @@
 }
 
 @media only screen and (max-width: 800px) {
+    .login-main {
+        background-image: url(https://images.unsplash.com/photo-1707400711977-328a8a52b416?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+        opacity: 0.9;
+    }
     .coverImg-login {
         display: none;
     }
