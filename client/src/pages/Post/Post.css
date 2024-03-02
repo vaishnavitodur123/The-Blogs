@@ -91,11 +91,6 @@
     font-size: 35px;
 }
 
-.singlePost-content-details p {
-    text-align: justify;
-    line-height: 30px;
-}
-
 @media only screen and (max-width: 1200px) {
     .singlePost-main {
         padding: 0 100px;

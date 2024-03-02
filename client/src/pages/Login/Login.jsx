@@ -1,16 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
 import { AuthContext } from "../../context/authContext";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import "./Login.css";
 
 export default function Login() {
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+
+    const [isShow, setIsShow] = useState(false);
     const navigate = useNavigate();
+    const { setCurrentUser } = useContext(AuthContext);
 
     useEffect(() => {
         const access_token = Cookies.get("access_token");
@@ -19,21 +25,22 @@ export default function Login() {
         }
     }, []);
 
-    const [isShow, setIsShow] = useState(false);
-    const { setCurrentUser } = useContext(AuthContext);
+    // Function to update the state on input change
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
-
-    const onSubmit = async (data) => {
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        // console.log(formData);
         try {
-            console.log(data);
             const res = await axios.post(
                 "http://localhost:8800/api/auth/login",
-                data
+                formData
             );
             console.log("response", res);
             if (res.status == 200) {
@@ -43,8 +50,8 @@ export default function Login() {
                 navigate("/");
             }
         } catch (err) {
-            toast.error(err.response.data);
-            console.log(err.response.data);
+            toast.error("Something went wrong. Please try again later.");
+            console.log(err);
         }
     };
 
@@ -57,23 +64,26 @@ export default function Login() {
                     Bridging Ideas: Connecting People through the Art of
                     Blogging
                 </p>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleFormSubmit}>
                     <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
                         placeholder="Email"
                         id="email"
-                        {...register("email", {
-                            required: true,
-                            maxLength: 20,
-                        })}
+                        onChange={handleInputChange}
+                        required
+                        autoComplete="off"
                     />
                     <div className="input-pass">
                         <input
                             type={isShow ? "text" : "password"}
+                            name="password"
+                            value={formData.password}
                             placeholder="Password"
-                            {...register("password", {
-                                required: true,
-                                maxLength: 20,
-                            })}
+                            onChange={handleInputChange}
+                            required
+                            autoComplete="off"
                         />
 
                         {isShow ? (

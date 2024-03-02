@@ -27,9 +27,12 @@ export default function Home() {
         fetchData();
     }, []);
 
-    const getText = (html) => {
+    const getHTML = (html) => {
         const doc = new DOMParser().parseFromString(html, "text/html");
-        return doc.body.textContent;
+
+        return {
+            __html: doc.body.innerHTML.split(" ").slice(20, 70).join(" "),
+        };
     };
 
     return (
@@ -40,14 +43,22 @@ export default function Home() {
                         {posts.map((post) => (
                             <div className="post" key={post.id}>
                                 <div className="img">
-                                    <img
-                                        src={`../../../public/upload/${post.img}`}
-                                        alt="postImg"
-                                    />
+                                    {post?.img ? (
+                                        <img
+                                            src={`/upload/${post.img}`}
+                                            alt="postImg"
+                                        />
+                                    ) : (
+                                        "Loading..."
+                                    )}
                                 </div>
                                 <div className="content">
                                     <h1>{post.title}</h1>
-                                    <p>{getText(post.desc)}</p>
+                                    <div
+                                        dangerouslySetInnerHTML={getHTML(
+                                            post.desc
+                                        )}
+                                    />
                                     <Link
                                         className="link"
                                         to={`/post/${post.id}`}

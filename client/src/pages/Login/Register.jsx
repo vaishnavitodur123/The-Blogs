@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import "./Register.css";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import "./Register.css";
 
 export default function Register() {
+    const [formData, setFormData] = useState({
+        username: "",
+        email: "",
+        password: "",
+    });
+
+    const [isShow, setIsShow] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,20 +24,21 @@ export default function Register() {
         }
     }, []);
 
-    const [isShow, setIsShow] = useState(false);
+    // Function to update the state on input change
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
-
-    const onSubmit = async (data) => {
-        // console.log(data);
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
         try {
             const res = await axios.post(
                 "http://localhost:8800/api/auth/register",
-                data
+                formData
             );
             console.log("response", res);
             if (res.status == 201) {
@@ -40,7 +47,7 @@ export default function Register() {
             }
         } catch (err) {
             toast.error(err.response.data);
-            console.log(err.response.data);
+            console.log(err);
         }
     };
 
@@ -53,29 +60,34 @@ export default function Register() {
                     Register to create your first account and start exploring
                     and sharing the world with everyone.
                 </p>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleFormSubmit}>
                     <input
+                        type="text"
+                        name="username"
+                        value={formData.username}
                         placeholder="User name"
-                        {...register("username", {
-                            required: true,
-                            maxLength: 20,
-                        })}
+                        onChange={handleInputChange}
+                        required
+                        autoComplete="off"
                     />
                     <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
                         placeholder="Email"
-                        {...register("email", {
-                            required: true,
-                            maxLength: 20,
-                        })}
+                        onChange={handleInputChange}
+                        required
+                        autoComplete="off"
                     />
                     <div className="input-pass">
                         <input
                             type={isShow ? "text" : "password"}
+                            name="password"
+                            value={formData.password}
                             placeholder="Password"
-                            {...register("password", {
-                                required: true,
-                                maxLength: 20,
-                            })}
+                            onChange={handleInputChange}
+                            required
+                            autoComplete="off"
                         />
                         {isShow ? (
                             <EyeIcon

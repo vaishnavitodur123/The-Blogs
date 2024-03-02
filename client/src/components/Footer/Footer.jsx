@@ -4,7 +4,7 @@ import "./Footer.css";
 export default function Footer() {
     return (
         <div className="footer-main">
-            <p>&copy;developedbyak with React.js</p>
+            <p>&copy;developedbyak with React</p>
         </div>
     );
 }

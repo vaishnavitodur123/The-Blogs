@@ -52,11 +52,7 @@
 .posts .post .content h1 {
     font-size: 25px;
     line-height: 1;
-}
-
-.posts .post .content p {
-    font-size: 16px;
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .posts .post .content button {

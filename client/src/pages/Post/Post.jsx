@@ -59,15 +59,15 @@ export default function Post() {
         }
     };
 
-    const getText = (html) => {
+    const getHTML = (html) => {
         const doc = new DOMParser().parseFromString(html, "text/html");
-        return doc.body.textContent;
+        return { __html: doc.body.innerHTML };
     };
 
     return (
         <div className="singlePost-main">
             <div className="singlePost-content">
-                <img src={`../../../public/upload/${post?.img}`} alt="img" />
+                <img src={`/upload/${post?.img}`} alt="img" />
                 <div className="user">
                     <img
                         src={
@@ -98,7 +98,10 @@ export default function Post() {
                 </div>
                 <div className="singlePost-content-details">
                     <h1>{post.title}</h1>
-                    {getText(post.desc)}
+                    <div
+                        className="postDesc"
+                        dangerouslySetInnerHTML={getHTML(post.desc)}
+                    />
                 </div>
             </div>
             <div className="singlePost-menu">
