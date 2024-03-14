@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { toast } from "sonner";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import "./Register.css";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { toast } from 'sonner';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import './Register.css';
 
 export default function Register() {
     const [formData, setFormData] = useState({
-        username: "",
-        email: "",
-        password: "",
+        username: '',
+        email: '',
+        password: '',
     });
 
     const [isShow, setIsShow] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const access_token = Cookies.get("access_token");
+        const access_token = Cookies.get('access_token');
         if (access_token) {
-            navigate("/");
+            navigate('/');
         }
     }, []);
 
@@ -37,24 +37,24 @@ export default function Register() {
         e.preventDefault();
         try {
             const res = await axios.post(
-                "http://localhost:8800/api/auth/register",
+                'http://localhost:8800/api/auth/register',
                 formData
             );
-            console.log("response", res);
+            console.log('response', res);
             if (res.status == 201) {
-                toast.success("Registration successful!");
-                navigate("/login");
+                toast.success(res.data.message);
+                navigate('/login');
             }
         } catch (err) {
-            toast.error(err.response.data);
-            console.log(err);
+            toast.error(err.response.data.error);
+            // console.log(err);
         }
     };
 
     return (
-        <section className="register-main">
-            <span className="credit">@developedbyak</span>
-            <div className="register-container">
+        <section className='register-main'>
+            <span className='credit'>@developedbyak</span>
+            <div className='register-container'>
                 <h1>Welcome to The Blogs!</h1>
                 <p>
                     Register to create your first account and start exploring
@@ -62,55 +62,55 @@ export default function Register() {
                 </p>
                 <form onSubmit={handleFormSubmit}>
                     <input
-                        type="text"
-                        name="username"
+                        type='text'
+                        name='username'
                         value={formData.username}
-                        placeholder="User name"
+                        placeholder='User name'
                         onChange={handleInputChange}
                         required
-                        autoComplete="off"
+                        autoComplete='off'
                     />
                     <input
-                        type="email"
-                        name="email"
+                        type='email'
+                        name='email'
                         value={formData.email}
-                        placeholder="Email"
+                        placeholder='Email'
                         onChange={handleInputChange}
                         required
-                        autoComplete="off"
+                        autoComplete='off'
                     />
-                    <div className="input-pass">
+                    <div className='input-pass'>
                         <input
-                            type={isShow ? "text" : "password"}
-                            name="password"
+                            type={isShow ? 'text' : 'password'}
+                            name='password'
                             value={formData.password}
-                            placeholder="Password"
+                            placeholder='Password'
                             onChange={handleInputChange}
                             required
-                            autoComplete="off"
+                            autoComplete='off'
                         />
                         {isShow ? (
                             <EyeIcon
-                                className="Eye"
+                                className='Eye'
                                 onClick={() => setIsShow(!isShow)}
                             />
                         ) : (
                             <EyeSlashIcon
-                                className="Eye"
+                                className='Eye'
                                 onClick={() => setIsShow(!isShow)}
                             />
                         )}
                     </div>
-                    <button type="submit">Register</button>
+                    <button type='submit'>Register</button>
                 </form>
                 <span>
-                    Already have an account?{" "}
-                    <Link to="/login" className="link">
+                    Already have an account?{' '}
+                    <Link to='/login' className='link'>
                         Log In
-                    </Link>{" "}
+                    </Link>{' '}
                 </span>
             </div>
-            <div className="coverImg-Register" />
+            <div className='coverImg-Register' />
         </section>
     );
 }

@@ -1,17 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { toast } from "sonner";
-import { AuthContext } from "../../context/authContext";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-import "./Login.css";
+import React, { useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { toast } from 'sonner';
+import { AuthContext } from '../../context/authContext';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import './Login.css';
 
 export default function Login() {
     const [formData, setFormData] = useState({
-        email: "",
-        password: "",
+        email: '',
+        password: '',
     });
 
     const [isShow, setIsShow] = useState(false);
@@ -19,9 +19,9 @@ export default function Login() {
     const { setCurrentUser } = useContext(AuthContext);
 
     useEffect(() => {
-        const access_token = Cookies.get("access_token");
+        const access_token = Cookies.get('access_token');
         if (access_token) {
-            navigate("/");
+            navigate('/');
         }
     }, []);
 
@@ -39,26 +39,26 @@ export default function Login() {
         // console.log(formData);
         try {
             const res = await axios.post(
-                "http://localhost:8800/api/auth/login",
+                'http://localhost:8800/api/auth/login',
                 formData
             );
-            console.log("response", res);
+            console.log('response', res);
             if (res.status == 200) {
-                toast.success("Logged in successfully.");
+                toast.success(res.data.message);
                 setCurrentUser(res.data.other);
-                Cookies.set("access_token", res.data.token);
-                navigate("/");
+                Cookies.set('access_token', res.data.token);
+                navigate('/');
             }
         } catch (err) {
-            toast.error("Something went wrong. Please try again later.");
-            console.log(err);
+            toast.error(err.response.data.error);
+            // console.log('Error: ', err);
         }
     };
 
     return (
-        <section className="login-main">
-            <span className="credit">@developedbyak</span>
-            <div className="login-container">
+        <section className='login-main'>
+            <span className='credit'>@developedbyak</span>
+            <div className='login-container'>
                 <h1>Welcome back!</h1>
                 <p>
                     Bridging Ideas: Connecting People through the Art of
@@ -66,49 +66,49 @@ export default function Login() {
                 </p>
                 <form onSubmit={handleFormSubmit}>
                     <input
-                        type="email"
-                        name="email"
+                        type='email'
+                        name='email'
                         value={formData.email}
-                        placeholder="Email"
-                        id="email"
+                        placeholder='Email'
+                        id='email'
                         onChange={handleInputChange}
                         required
-                        autoComplete="off"
+                        autoComplete='off'
                     />
-                    <div className="input-pass">
+                    <div className='input-pass'>
                         <input
-                            type={isShow ? "text" : "password"}
-                            name="password"
+                            type={isShow ? 'text' : 'password'}
+                            name='password'
                             value={formData.password}
-                            placeholder="Password"
+                            placeholder='Password'
                             onChange={handleInputChange}
                             required
-                            autoComplete="off"
+                            autoComplete='off'
                         />
 
                         {isShow ? (
                             <EyeIcon
                                 size={15}
-                                className="Eye"
+                                className='Eye'
                                 onClick={() => setIsShow(!isShow)}
                             />
                         ) : (
                             <EyeSlashIcon
-                                className="Eye"
+                                className='Eye'
                                 onClick={() => setIsShow(!isShow)}
                             />
                         )}
                     </div>
-                    <button type="submit">Login</button>
+                    <button type='submit'>Login</button>
                 </form>
                 <span>
-                    Don't have an account?{" "}
-                    <Link to="/register" className="link">
+                    Don't have an account?{' '}
+                    <Link to='/register' className='link'>
                         Register
-                    </Link>{" "}
+                    </Link>{' '}
                 </span>
             </div>
-            <div className="coverImg-login" />
+            <div className='coverImg-login' />
         </section>
     );
 }

@@ -1,58 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 // import posts from "../../posts.js";
-import "./Home.css";
-import { Link, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import axios from "axios";
+import './Home.css';
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 export default function Home() {
     const [posts, setPosts] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const access_token = Cookies.get("access_token");
+        const access_token = Cookies.get('access_token');
         if (!access_token) {
-            navigate("/login");
+            navigate('/login');
         }
 
         const fetchData = async () => {
             try {
                 const res = await axios.get(`http://localhost:8800/api/posts/`);
-                // console.log("posts: ", res);
                 setPosts(res.data);
             } catch (err) {
-                console.log(err);
+                toast.error(err.response.data.error);
+                // console.log(err);
             }
         };
         fetchData();
     }, []);
 
     const getHTML = (html) => {
-        const doc = new DOMParser().parseFromString(html, "text/html");
+        const doc = new DOMParser().parseFromString(html, 'text/html');
 
         return {
-            __html: doc.body.innerHTML.split(" ").slice(20, 70).join(" "),
+            __html: doc.body.innerHTML.split(' ').slice(20, 70).join(' '),
         };
     };
 
     return (
         <>
-            <div className="home-main">
+            <div className='home-main'>
                 {posts.length > 0 ? (
-                    <div className="posts">
+                    <div className='posts'>
                         {posts.map((post) => (
-                            <div className="post" key={post.id}>
-                                <div className="img">
+                            <div className='post' key={post.id}>
+                                <div className='img'>
                                     {post?.img ? (
                                         <img
                                             src={`/upload/${post.img}`}
-                                            alt="postImg"
+                                            alt='postImg'
                                         />
                                     ) : (
-                                        "Loading..."
+                                        'Loading...'
                                     )}
                                 </div>
-                                <div className="content">
+                                <div className='content'>
                                     <h1>{post.title}</h1>
                                     <div
                                         dangerouslySetInnerHTML={getHTML(
@@ -60,7 +61,7 @@ export default function Home() {
                                         )}
                                     />
                                     <Link
-                                        className="link"
+                                        className='link'
                                         to={`/post/${post.id}`}
                                     >
                                         <button>Read More</button>
@@ -70,7 +71,7 @@ export default function Home() {
                         ))}
                     </div>
                 ) : (
-                    <div className="empty-state">
+                    <div className='empty-state'>
                         <p>Be the first to share your thoughts!</p>
                         <p>There are no posts here yet - </p>
                         <p>why not create a new one?</p>

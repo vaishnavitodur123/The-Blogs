@@ -1,32 +1,32 @@
-import React, { useState } from "react";
-import { toast } from "sonner";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import CategoryDropdown from "../../components/ui/CategoryDropdown/CategoryDropdown";
-import { useLocation, useNavigate } from "react-router-dom";
-import moment from "moment";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import "./Write.css";
+import React, { useState } from 'react';
+import { toast } from 'sonner';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import CategoryDropdown from '../../components/ui/CategoryDropdown/CategoryDropdown';
+import { useLocation, useNavigate } from 'react-router-dom';
+import moment from 'moment';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import './Write.css';
 
 export default function Write() {
     const state = useLocation().state;
 
-    console.log(state);
-    const [value, setValue] = useState(state?.desc || "");
-    const [title, setTitle] = useState(state?.title || "");
+    // console.log('state: ', state);
+    const [value, setValue] = useState(state?.desc || '');
+    const [title, setTitle] = useState(state?.title || '');
     const [file, setFile] = useState(null);
-    const [cat, setCat] = useState(state?.cat || "");
+    const [cat, setCat] = useState(state?.cat || '');
 
     const navigate = useNavigate();
 
     const upload = async () => {
         try {
             const formData = new FormData();
-            formData.append("file", file);
+            formData.append('file', file);
             const res = await axios.post(
-                "http://localhost:8800/api/upload",
+                'http://localhost:8800/api/upload',
                 formData
             );
             return res.data;
@@ -37,16 +37,17 @@ export default function Write() {
 
     const handleCategorySelect = (selectedCategory) => {
         setCat(selectedCategory);
-        console.log("Selected category:", selectedCategory);
+        console.log('Selected category:', selectedCategory);
     };
 
     const handlePostPublish = async () => {
         const imgUrl = await upload();
+        console.log('imgUrl: ', imgUrl);
 
-        const token = Cookies.get("access_token");
+        const token = Cookies.get('access_token');
 
         try {
-            state
+            const res = state
                 ? await axios.post(`http://localhost:8800/api/posts/update`, {
                       title,
                       desc: value,
@@ -59,62 +60,64 @@ export default function Write() {
                       title,
                       desc: value,
                       cat,
-                      img: file ? imgUrl : "",
-                      date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+                      img: file ? imgUrl : '',
+                      date: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
                       token,
                   });
-            toast.success("Post uploaded successfully.");
-            navigate("/");
+
+            toast.success(res.data.message);
+            navigate('/');
         } catch (err) {
+            toast.error(err.response.data.error);
             console.log(err);
         }
     };
 
     return (
-        <div className="write-main">
-            <div className="write-content">
-                <div className="container1">
-                    <div className="imgUploadBtn">
+        <div className='write-main'>
+            <div className='write-content'>
+                <div className='container1'>
+                    <div className='imgUploadBtn'>
                         <input
-                            style={{ display: "none" }}
-                            type="file"
-                            id="file"
+                            style={{ display: 'none' }}
+                            type='file'
+                            id='file'
                             onChange={(e) => setFile(e.target.files[0])}
                         />
-                        <label htmlFor="file">Cover photo</label>
+                        <label htmlFor='file'>Cover photo</label>
                         {file?.name && (
                             <>
-                                <span className="img-name">
-                                    {file.name.split(" ").slice(0, 5).join(" ")}
+                                <span className='img-name'>
+                                    {file.name.split(' ').slice(0, 5).join(' ')}
                                 </span>
                                 <XMarkIcon
-                                    className="XIcon"
+                                    className='XIcon'
                                     onClick={() => setFile(null)}
                                 />
                             </>
                         )}
                     </div>
                     <input
-                        className="input-title"
-                        type="text"
-                        placeholder=" Your blog title"
+                        className='input-title'
+                        type='text'
+                        placeholder=' Your blog title'
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
                 </div>
-                <div className="editorContainer">
+                <div className='editorContainer'>
                     <ReactQuill
-                        className="editor"
-                        theme="snow"
+                        className='editor'
+                        theme='snow'
                         value={value}
                         onChange={setValue}
                     />
                 </div>
             </div>
-            <div className="write-menu">
+            <div className='write-menu'>
                 <CategoryDropdown onSelect={handleCategorySelect} />
                 <button onClick={handlePostPublish}>
-                    {state ? "Update" : "Publish"}
+                    {state ? 'Update' : 'Publish'}
                 </button>
             </div>
         </div>
