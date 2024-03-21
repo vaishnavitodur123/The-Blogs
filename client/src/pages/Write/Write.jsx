@@ -13,7 +13,7 @@ import './Write.css';
 export default function Write() {
     const state = useLocation().state;
 
-    // console.log('state: ', state);
+    console.log('state: ', state);
     const [value, setValue] = useState(state?.desc || '');
     const [title, setTitle] = useState(state?.title || '');
     const [file, setFile] = useState(null);

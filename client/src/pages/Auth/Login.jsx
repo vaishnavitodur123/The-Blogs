@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { toast } from 'sonner';
+import { AuthContext } from '../../context/authContext';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import './Register.css';
+import './Login.css';
 
-export default function Register() {
+export default function Login() {
     const [formData, setFormData] = useState({
-        username: '',
         email: '',
         password: '',
     });
 
     const [isShow, setIsShow] = useState(false);
     const navigate = useNavigate();
+    const { setCurrentUser } = useContext(AuthContext);
 
     useEffect(() => {
         const access_token = Cookies.get('access_token');
@@ -35,46 +36,41 @@ export default function Register() {
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
+        // console.log(formData);
         try {
             const res = await axios.post(
-                'http://localhost:8800/api/auth/register',
+                'http://localhost:8800/api/auth/login',
                 formData
             );
             console.log('response', res);
-            if (res.status == 201) {
+            if (res.status == 200) {
                 toast.success(res.data.message);
-                navigate('/login');
+                setCurrentUser(res.data.other);
+                Cookies.set('access_token', res.data.token);
+                navigate('/');
             }
         } catch (err) {
             toast.error(err.response.data.error);
-            // console.log(err);
+            // console.log('Error: ', err);
         }
     };
 
     return (
-        <section className='register-main'>
-            <span className='credit'>@developedbyak</span>
-            <div className='register-container'>
-                <h1>Welcome to The Blogs!</h1>
+        <section className='login-main'>
+            <span className='credit'>@madewithreact</span>
+            <div className='login-container'>
+                <h1>Welcome back!</h1>
                 <p>
-                    Register to create your first account and start exploring
-                    and sharing the world with everyone.
+                    Bridging Ideas: Connecting People through the Art of
+                    Blogging
                 </p>
                 <form onSubmit={handleFormSubmit}>
-                    <input
-                        type='text'
-                        name='username'
-                        value={formData.username}
-                        placeholder='User name'
-                        onChange={handleInputChange}
-                        required
-                        autoComplete='off'
-                    />
                     <input
                         type='email'
                         name='email'
                         value={formData.email}
                         placeholder='Email'
+                        id='email'
                         onChange={handleInputChange}
                         required
                         autoComplete='off'
@@ -89,8 +85,10 @@ export default function Register() {
                             required
                             autoComplete='off'
                         />
+
                         {isShow ? (
                             <EyeIcon
+                                size={15}
                                 className='Eye'
                                 onClick={() => setIsShow(!isShow)}
                             />
@@ -101,16 +99,16 @@ export default function Register() {
                             />
                         )}
                     </div>
-                    <button type='submit'>Register</button>
+                    <button type='submit'>Login</button>
                 </form>
                 <span>
-                    Already have an account?{' '}
-                    <Link to='/login' className='link'>
-                        Log In
+                    Don't have an account?{' '}
+                    <Link to='/register' className='link'>
+                        Register
                     </Link>{' '}
                 </span>
             </div>
-            <div className='coverImg-Register' />
+            <div className='coverImg-login' />
         </section>
     );
 }

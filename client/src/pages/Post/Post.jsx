@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Menu from '../../components/Menu/Menu';
-import { useParams } from 'react-router-dom';
 import {
     PencilSquareIcon,
     ArchiveBoxXMarkIcon,

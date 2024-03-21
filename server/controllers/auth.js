@@ -48,15 +48,15 @@ export const register = async (req, res) => {
             });
 
             // Close the connection when done
-            db.end((error) => {
-                if (error) {
-                    console.error(
-                        'Error closing the MySQL connection: ' + error
-                    );
-                } else {
-                    console.log('Connection closed');
-                }
-            });
+            // db.end((error) => {
+            //     if (error) {
+            //         console.error(
+            //             'Error closing the MySQL connection: ' + error
+            //         );
+            //     } else {
+            //         console.log('Connection closed');
+            //     }
+            // });
         });
     });
 };
@@ -67,10 +67,12 @@ export const login = (req, res) => {
     const q = 'SELECT * FROM users WHERE email = ?';
 
     db.query(q, [req.body.email], (err, data) => {
-        if (err)
+        if (err) {
+            console.log(err);
             return res.status(500).json({
                 error: 'Internal Server Error. Please try again later.',
             });
+        }
         if (data.length === 0) {
             return res.status(404).json({
                 error: 'No records found. Please register or provide a valid email.',
