@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 
 export default function Home() {
     const [posts, setPosts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,6 +21,7 @@ export default function Home() {
             try {
                 const res = await axios.get(`http://localhost:8800/api/posts/`);
                 setPosts(res.data);
+                setIsLoading(false);
             } catch (err) {
                 toast.error(err.response.data.error);
                 // console.log(err);
@@ -39,7 +41,9 @@ export default function Home() {
     return (
         <>
             <div className='home-main'>
-                {posts.length > 0 ? (
+                {isLoading ? (
+                    <div>Loading...</div>
+                ) : posts.length > 0 ? (
                     <div className='posts'>
                         {posts.map((post) => (
                             <div className='post' key={post.id}>
@@ -50,7 +54,7 @@ export default function Home() {
                                             alt='postImg'
                                         />
                                     ) : (
-                                        'Loading...'
+                                        'This post does not have any images'
                                     )}
                                 </div>
                                 <div className='content'>

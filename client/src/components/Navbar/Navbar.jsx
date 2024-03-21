@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import gsap from "gsap";
-import { Bars2Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { AuthContext } from "../../context/authContext.jsx";
-import "./Navbar.css";
-import Cookies from "js-cookie";
-import { toast } from "sonner";
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import gsap from 'gsap';
+import { Bars2Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { AuthContext } from '../../context/authContext.jsx';
+import './Navbar.css';
+import Cookies from 'js-cookie';
+import { toast } from 'sonner';
 
 export default function Navbar() {
     const [toggle, setToggle] = useState(false);
@@ -15,65 +15,65 @@ export default function Navbar() {
 
     useEffect(() => {
         if (toggle) {
-            gsap.to(".mobile-nav-container", {
+            gsap.to('.mobile-nav-container', {
                 x: 0,
                 opacity: 1,
                 duration: 1,
-                ease: "expo.out",
+                ease: 'expo.out',
             });
         } else {
-            gsap.to(".mobile-nav-container", {
+            gsap.to('.mobile-nav-container', {
                 x: 100,
                 opacity: 0,
                 duration: 0.7,
-                ease: "expo.out",
+                ease: 'expo.out',
             });
         }
     }, [toggle]);
 
     const handleLogout = () => {
-        Cookies.remove("access_token");
+        Cookies.remove('access_token');
         localStorage.clear();
-        toast.success("We hope to see you again soon!");
-        navigate("/login");
+        toast.success('We hope to see you again soon!');
+        navigate('/login');
     };
 
     return (
         <>
-            <nav className="nav-main">
-                <div className="nav-container">
-                    <div className="nav-left">
-                        <Link className="link" to="/">
+            <nav className='nav-main'>
+                <div className='nav-container'>
+                    <div className='nav-left'>
+                        <Link className='link' to='/'>
                             <span>The Blogs</span>
                         </Link>
                     </div>
-                    <div className="nav-right">
+                    <div className='nav-right'>
                         {currentUser && <span>{currentUser.username}</span>}
                         <span onClick={handleLogout}>Logout</span>
-                        <Link className="link" to="/write">
+                        <Link className='link' to='/write'>
                             <span>Write</span>
                         </Link>
                     </div>
-                    <div className="nav-menu-icon">
+                    <div className='nav-menu-icon'>
                         {toggle ? (
                             <XMarkIcon
                                 onClick={() => setToggle(false)}
-                                className="menu-icon"
+                                className='menu-icon'
                             />
                         ) : (
                             <Bars2Icon
                                 onClick={() => setToggle(true)}
-                                className="menu-icon"
+                                className='menu-icon'
                             />
                         )}
 
                         {/* mobile Navbar */}
-                        <div className="mobile-nav-container">
+                        <div className='mobile-nav-container'>
                             <ul>
                                 <li>
                                     <Link
                                         onClick={() => setToggle(false)}
-                                        className="link"
+                                        className='link'
                                     >
                                         Designing
                                     </Link>
@@ -81,7 +81,7 @@ export default function Navbar() {
                                 <li>
                                     <Link
                                         onClick={() => setToggle(false)}
-                                        className="link"
+                                        className='link'
                                     >
                                         Development
                                     </Link>
@@ -89,7 +89,7 @@ export default function Navbar() {
                                 <li>
                                     <Link
                                         onClick={() => setToggle(false)}
-                                        className="link"
+                                        className='link'
                                     >
                                         Akash
                                     </Link>
@@ -97,13 +97,15 @@ export default function Navbar() {
                                 <li>
                                     <Link
                                         onClick={() => setToggle(false)}
-                                        className="link"
+                                        className='link'
                                     >
                                         Write
                                     </Link>
                                 </li>
                                 <li>
-                                    <button>Log-Out</button>
+                                    <button onClick={handleLogout}>
+                                        Log-Out
+                                    </button>
                                 </li>
                             </ul>
                         </div>
